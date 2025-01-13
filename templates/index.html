@@ -19,367 +19,204 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            background: var(--header-bg);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .main-footer {
+            background: var(--footer-bg);
             color: white;
             padding: 1.5rem 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 1000;
+            margin-top: auto;
         }
 
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-brand img {
-            width: 40px;
-            height: 40px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-
-        .header-brand h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-            background: linear-gradient(45deg, #fff, #e3f2fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 20px;
-        }
-
-        .user-info-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 10px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .user-info-card div {
-            margin: 5px 0;
-            font-size: 0.9rem;
-        }
-
-        /* Main Content Styles */
-        .card {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            background: white;
-            border-radius: 10px;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .search-box {
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .search-box input {
-            padding-left: 35px;
-            border-radius: 20px;
-            border: 1px solid #dee2e6;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .search-box::before {
-            content: '\f002';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c757d;
-        }
-
-        /* Video Player Styles */
-        #video-container {
-            position: relative;
-            width: 100%;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        #video {
-            width: 100%;
-            max-height: 70vh;
-            background: #000;
-        }
-
-        .video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            display: flex;
-            gap: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        #video-container:hover .video-controls {
-            opacity: 1;
-        }
-
-        .stream-item {
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .stream-item:hover {
-            transform: translateX(5px);
-            background: #f8f9fa;
-        }
-
-        .stream-icon {
+        .stream-item img {
             width: 30px;
             height: 30px;
             object-fit: contain;
             margin-right: 10px;
-            border-radius: 4px;
         }
 
-        /* Footer Styles */
-        .main-footer {
-            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
-            color: white;
-            padding: 2rem 0 1rem 0;
-            margin-top: auto;
-            position: relative;
-            overflow: hidden;
+        .stream-title {
+            font-size: 14px;
+            margin-left: 10px;
         }
 
-        .footer-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .footer-brand {
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-brand h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-social a {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .footer-social a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .developed-by {
-            font-weight: 600;
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .developed-by:hover {
-            color: #e3f2fd;
-        }
-
-        .footer-wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        #video {
+            background: #000;
+            border-radius: 8px;
+            max-height: 70vh;
             width: 100%;
-            height: 50px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,208C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            background-repeat: no-repeat;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .header-brand h1 {
-                font-size: 1.4rem;
-            }
-
-            .user-info-card {
-                font-size: 0.8rem;
-                padding: 8px 12px;
-            }
-
-            #video {
-                max-height: 40vh;
-            }
-
-            .footer-links {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .footer-social {
-                justify-content: center;
-            }
-
-            .video-controls {
-                padding: 5px;
-            }
-        }
-
-        /* Loading Animation */
-        .loading-spinner {
+        #loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.7);
-            display: none;
+            z-index: 9999;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            display: none;
         }
 
-        .loading-spinner::after {
-            content: '';
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .category-btn {
+            text-align: left;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            background: var(--primary-color);
+            color: white;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .category-btn:hover {
+            transform: translateX(5px);
+            background: #283593;
         }
 
-        /* Export Button */
-        .export-btn {
+        .stream-btn {
+            transition: all 0.2s;
+        }
+
+        .stream-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .stream-url {
+            font-size: 12px;
+            word-break: break-all;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            border: 1px solid #dee2e6;
+            display: none;
+        }
+
+        .url-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #90caf9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            #video {
+                max-height: 40vh;
+            }
+            .stream-title {
+                font-size: 12px;
+            }
+            .main-header {
+                padding: 0.5rem 0;
+            }
+            .main-footer {
+                padding: 1rem 0;
+            }
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .copy-success {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 1000;
             padding: 10px 20px;
-            border-radius: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: #4caf50;
+            color: white;
+            border-radius: 4px;
+            display: none;
+            animation: fadeInOut 2s ease-in-out;
         }
 
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Spinner -->
-    <div class="loading-spinner" id="loading-spinner"></div>
-
     <!-- Header -->
     <header class="main-header">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <div class="header-brand">
-                        <img src="https://img.icons8.com/fluency/48/000000/iptv.png" alt="IPTV Logo">
-                        <h1>Professional IPTV Player</h1>
-                    </div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-tv me-2"></i>Professional IPTV Player
+                    </h1>
                 </div>
-                <div class="col-md-6">
-                    <div class="header-controls" id="user-info">
-                        <!-- User info will be populated here -->
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Loading Spinner -->
+    <div id="loading">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="container my-4">
         <!-- Login Section -->
-        <div id="login-section" class="row">
+        <div class="row" id="loginSection">
             <div class="col-md-6 offset-md-3">
-                <div class="card">
-                    <div class="card-body p-4">
+                <div class="card shadow">
+                    <div class="card-body">
                         <h3 class="card-title text-center mb-4">IPTV Login</h3>
-                        <form id="login-form">
+                        <form id="loginForm">
                             <div class="mb-3">
                                 <label class="form-label">Server Address</label>
-                                <input type="text" class="form-control" id="server" required>
+                                <input type="text" class="form-control" id="server" 
+                                       value="http://watchindia.net:8880" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" required>
+                                <input type="text" class="form-control" id="username" 
+                                       value="55901" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" required>
+                                <input type="password" class="form-control" id="password" 
+                                       value="63571" required>
                             </div>
-                            <div id="login-error" class="alert alert-danger" style="display: none;"></div>
+                            <div id="loginError" class="alert alert-danger" style="display: none;"></div>
                             <button type="submit" class="btn btn-primary w-100">
                                 <i class="fas fa-sign-in-alt me-2"></i>Login
                             </button>
@@ -390,15 +227,14 @@
         </div>
 
         <!-- Player Section -->
-        <div id="player-section" class="row" style="display: none;">
+        <div class="row" id="playerSection" style="display: none;">
             <div class="col-md-3">
-                <div class="card mb-3">
+                <div class="card shadow mb-4">
                     <div class="card-body">
-                        <div class="search-box">
-                            <input type="text" class="form-control" id="search-input" 
-                                   placeholder="Search channels...">
-                        </div>
-                        <div id="categories"></div>
+                        <h5 class="card-title">
+                            <i class="fas fa-list me-2"></i>Categories
+                        </h5>
+                        <div id="categories" class="d-grid gap-2"></div>
                     </div>
                 </div>
                 <button onclick="logout()" class="btn btn-danger w-100 mb-3">
@@ -406,171 +242,203 @@
                 </button>
             </div>
             <div class="col-md-9">
-                <div class="card">
+                <div class="card shadow">
                     <div class="card-body">
-                        <div id="video-container">
-                            <video id="video" controls></video>
-                            <div class="video-controls">
-                                <button class="btn btn-sm btn-light" onclick="toggleFullscreen()">
-                                    <i class="fas fa-expand"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="streams" class="mt-3"></div>
+                        <video id="video" controls class="w-100 mb-3"></video>
+                        <div id="streams" class="row g-2"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Export Button -->
-    <button id="export-btn" class="btn btn-success export-btn" style="display: none;"
-            onclick="exportPlaylist()">
-        <i class="fas fa-download me-2"></i>Export Playlist
-    </button>
+    <!-- Copy Success Notification -->
+    <div class="copy-success" id="copySuccess">
+        URL copied to clipboard!
+    </div>
 
     <!-- Footer -->
     <footer class="main-footer">
-        <div class="container footer-content">
+        <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="footer-brand">
-                        <h3>Professional IPTV Player</h3>
-                        <p>Your Ultimate Streaming Solution for High-Quality Entertainment</p>
-                    </div>
-                    <div class="footer-links">
-                        <a href="#"><i class="fas fa-home me-2"></i>Home</a>
-                        <a href="#"><i class="fas fa-info-circle me-2"></i>About</a>
-                        <a href="#"><i class="fas fa-envelope me-2"></i>Contact</a>
-                        <a href="#"><i class="fas fa-question-circle me-2"></i>Help</a>
-                    </div>
+                    <h5>About IPTV Player</h5>
+                    <p class="mb-0">Professional IPTV Player with advanced streaming capabilities and channel management.</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
                     </div>
+                    <p class="mt-2 mb-0">&copy; 2024 IPTV Player. All rights reserved.</p>
                 </div>
-            </div>
-            <div class="footer-bottom">
-                <p>
-                    &copy; 2024 Professional IPTV Player. All rights reserved.<br>
-                    Developed with <i class="fas fa-heart text-danger"></i> by 
-                    <a href="#" class="developed-by">Sultan</a>
-                </p>
             </div>
         </div>
-        <div class="footer-wave"></div>
     </footer>
 
     <script>
-        const loginSection = document.getElementById('login-section');
-        const playerSection = document.getElementById('player-section');
-        const loginError = document.getElementById('login-error');
-        const exportBtn = document.getElementById('export-btn');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        let currentCategory = null;
+        const loading = document.getElementById('loading');
+        const loginError = document.getElementById('loginError');
+        const loginSection = document.getElementById('loginSection');
+        const playerSection = document.getElementById('playerSection');
+        const copySuccess = document.getElementById('copySuccess');
 
         function showLoading() {
-            loadingSpinner.style.display = 'flex';
+            loading.style.display = 'flex';
         }
 
         function hideLoading() {
-            loadingSpinner.style.display = 'none';
+            loading.style.display = 'none';
         }
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        function showError(message) {
+            loginError.style.display = 'block';
+            loginError.textContent = message;
+        }
+
+        function hideError() {
             loginError.style.display = 'none';
+        }
+
+        function showCopySuccess() {
+            copySuccess.style.display = 'block';
+            setTimeout(() => {
+                copySuccess.style.display = 'none';
+            }, 2000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
             showLoading();
 
-            const formData = {
-                server: document.getElementById('server').value,
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
-            };
+            const server = document.getElementById('server').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
             try {
                 const response = await fetch('/connect', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(formData)
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ server, username, password })
                 });
 
                 const data = await response.json();
                 if (data.status === 'success') {
                     loginSection.style.display = 'none';
-                    playerSection.style.display = 'block';
-                    exportBtn.style.display = 'block';
-                    updateUserInfo(data.data.user_info);
+                    playerSection.style.display = 'flex';
                     loadCategories();
                 } else {
-                    loginError.textContent = data.message;
-                    loginError.style.display = 'block';
+                    showError(data.message || 'Login failed');
                 }
             } catch (error) {
-                loginError.textContent = 'Connection error occurred';
-                loginError.style.display = 'block';
+                showError('Server error occurred');
+                console.error('Login error:', error);
             }
             hideLoading();
         });
-
-        function updateUserInfo(userInfo) {
-            const userInfoDiv = document.getElementById('user-info');
-            userInfoDiv.innerHTML = `
-                <div class="user-info-card">
-                    <div><i class="fas fa-user me-2"></i>Account: ${userInfo.username}</div>
-                    <div><i class="fas fa-clock me-2"></i>Expires: ${userInfo.exp_date}</div>
-                    <div><i class="fas fa-signal me-2"></i>Status: Active</div>
-                </div>
-            `;
-        }
 
         async function loadCategories() {
             showLoading();
             try {
                 const response = await fetch('/categories');
-                const categories = await response.json();
-                
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
                 const categoriesDiv = document.getElementById('categories');
-                categoriesDiv.innerHTML = categories.map(cat => `
-                    <button class="btn btn-outline-primary w-100 mb-2 text-start stream-item"
-                            onclick="loadStreams(${cat.category_id})">
-                        <i class="fas fa-folder me-2"></i>${cat.category_name}
-                    </button>
-                `).join('');
+                if (Array.isArray(data) && data.length > 0) {
+                    categoriesDiv.innerHTML = data.map(cat => 
+                        `<button class="btn btn-outline-primary category-btn" 
+                         onclick="loadStreams(${cat.category_id})">
+                            <i class="fas fa-folder me-2"></i>${cat.category_name}
+                        </button>`
+                    ).join('');
+                } else {
+                    categoriesDiv.innerHTML = '<div class="alert alert-info">No categories found</div>';
+                }
             } catch (error) {
-                console.error('Error loading categories:', error);
+                console.error('Category loading error:', error);
+                document.getElementById('categories').innerHTML = 
+                    `<div class="alert alert-danger">
+                        Error loading categories: ${error.message}
+                    </div>`;
             }
             hideLoading();
         }
 
-        async function loadStreams(categoryId, searchTerm = '') {
+        async function loadStreams(categoryId) {
             showLoading();
-            currentCategory = categoryId;
             try {
-                const url = `/streams?category_id=${categoryId}${searchTerm ? `&search=${searchTerm}` : ''}`;
-                const response = await fetch(url);
-                const streams = await response.json();
-                
+                const response = await fetch(`/streams?category_id=${categoryId}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
                 const streamsDiv = document.getElementById('streams');
-                streamsDiv.innerHTML = streams.map(stream => `
-                    <div class="stream-item p-2">
-                        <button class="btn btn-outline-secondary w-100 text-start"
-                                onclick="playStream('${stream.stream_url}.m3u8')">
-                            <img src="${stream.stream_icon || '#'}" class="stream-icon" 
-                                 onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='">
-                            ${stream.name}
-                        </button>
-                    </div>
-                `).join('');
+                if (Array.isArray(data) && data.length > 0) {
+                    streamsDiv.innerHTML = data.map(stream => {
+                        const m3u8Url = stream.stream_url + '.m3u8';
+                        return `<div class="col-12 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body p-2">
+                                    <button class="btn btn-outline-secondary w-100 text-start stream-btn" 
+                                            onclick="playStream('${m3u8Url}')">
+                                        <img src="${stream.stream_icon || '#'}" 
+                                             onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='"
+                                             alt="${stream.name}">
+                                        <span class="stream-title">${stream.name}</span>
+                                    </button>
+                                    <div class="url-controls">
+                                        <button class="btn btn-sm btn-info" 
+                                                onclick="toggleStreamUrl(this, '${m3u8Url}')">
+                                            <i class="fas fa-link me-1"></i>Show/Hide URL
+                                        </button>
+                                        <button class="btn btn-sm btn-success copy-btn" 
+                                                onclick="copyStreamUrl('${m3u8Url}')">
+                                            <i class="fas fa-copy me-1"></i>Copy URL
+                                        </button>
+                                    </div>
+                                    <div class="stream-url" id="url-${stream.stream_id}">
+                                        ${m3u8Url}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    streamsDiv.innerHTML = '<div class="alert alert-info">No channels found</div>';
+                }
             } catch (error) {
-                console.error('Error loading streams:', error);
+                console.error('Stream loading error:', error);
+                document.getElementById('streams').innerHTML = 
+                    `<div class="alert alert-danger">
+                        Error loading channels: ${error.message}
+                    </div>`;
             }
             hideLoading();
+        }
+
+        function toggleStreamUrl(button, url) {
+            const urlDiv = button.parentElement.nextElementSibling;
+            urlDiv.style.display = urlDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function copyStreamUrl(url) {
+            try {
+                await navigator.clipboard.writeText(url);
+                showCopySuccess();
+            } catch (err) {
+                console.error('Failed to copy URL:', err);
+                alert('Failed to copy URL');
+            }
         }
 
         function playStream(url) {
@@ -579,24 +447,11 @@
                 const hls = new Hls();
                 hls.loadSource(url);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-            }
-        }
-
-        function toggleFullscreen() {
-            const video = document.getElementById('video');
-            if (!document.fullscreenElement) {
-                video.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        async function exportPlaylist() {
-            try {
-                window.location.href = '/export_playlist';
-            } catch (error) {
-                console.error('Error exporting playlist:', error);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(function(error) {
+                        console.log("Play failed:", error);
+                    });
+                });
             }
         }
 
@@ -606,7 +461,7 @@
                 await fetch('/logout');
                 loginSection.style.display = 'block';
                 playerSection.style.display = 'none';
-                exportBtn.style.display = 'none';
+                document.getElementById('loginForm').reset();
                 const video = document.getElementById('video');
                 video.pause();
                 video.src = '';
@@ -616,13 +471,6 @@
             hideLoading();
         }
 
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            if (currentCategory) {
-                loadStreams(currentCategory, e.target.value);
-            }
-        });
-
-        // Handle responsive design
         document.addEventListener('DOMContentLoaded', function() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 document.querySelector('.col-md-3').classList.add('mb-3');
@@ -631,3 +479,4 @@
     </script>
 </body>
 </html>
+
