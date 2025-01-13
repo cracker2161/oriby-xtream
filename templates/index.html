@@ -3,29 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Player</title>
+    <title>Professional IPTV Player</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
+        :root {
+            --header-bg: #1a237e;
+            --footer-bg: #1a237e;
+            --primary-color: #3949ab;
+        }
+        
         body {
             background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
+        .main-header {
+            background: var(--header-bg);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .main-footer {
+            background: var(--footer-bg);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
         .stream-item img {
             width: 30px;
             height: 30px;
             object-fit: contain;
             margin-right: 10px;
         }
+
         .stream-title {
             font-size: 14px;
             margin-left: 10px;
         }
+
         #video {
             background: #000;
             border-radius: 8px;
             max-height: 70vh;
+            width: 100%;
         }
+
         #loading {
             position: fixed;
             top: 0;
@@ -38,25 +66,56 @@
             align-items: center;
             display: none;
         }
+
         .category-btn {
             text-align: left;
             margin-bottom: 5px;
             transition: all 0.3s;
+            background: var(--primary-color);
+            color: white;
         }
+
         .category-btn:hover {
             transform: translateX(5px);
+            background: #283593;
         }
+
         .stream-btn {
             transition: all 0.2s;
         }
+
         .stream-btn:hover {
             transform: scale(1.02);
         }
-        .error-message {
-            color: #dc3545;
-            margin-top: 10px;
+
+        .stream-url {
+            font-size: 12px;
+            word-break: break-all;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            border: 1px solid #dee2e6;
             display: none;
         }
+
+        .url-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #90caf9;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -67,44 +126,74 @@
             .stream-title {
                 font-size: 12px;
             }
-            .stream-item img {
-                width: 25px;
-                height: 25px;
+            .main-header {
+                padding: 0.5rem 0;
             }
-            .category-btn {
-                font-size: 14px;
-                padding: 8px;
+            .main-footer {
+                padding: 1rem 0;
             }
         }
-        .stream-url {
-            font-size: 12px;
-            word-break: break-all;
-            background: #f8f9fa;
-            padding: 5px;
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .copy-success {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
             border-radius: 4px;
-            margin-top: 5px;
             display: none;
+            animation: fadeInOut 2s ease-in-out;
         }
-        .copy-btn {
-            font-size: 12px;
-            padding: 2px 8px;
-            margin-top: 5px;
-        }
-        .url-controls {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-tv me-2"></i>Professional IPTV Player
+                    </h1>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Loading Spinner -->
     <div id="loading">
         <div class="spinner-border text-light" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
-    <div class="container mt-4">
+    <!-- Main Content -->
+    <div class="container my-4">
         <!-- Login Section -->
         <div class="row" id="loginSection">
             <div class="col-md-6 offset-md-3">
@@ -128,7 +217,9 @@
                                        value="63571" required>
                             </div>
                             <div id="loginError" class="alert alert-danger" style="display: none;"></div>
-                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -140,11 +231,15 @@
             <div class="col-md-3">
                 <div class="card shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">Categories</h5>
+                        <h5 class="card-title">
+                            <i class="fas fa-list me-2"></i>Categories
+                        </h5>
                         <div id="categories" class="d-grid gap-2"></div>
                     </div>
                 </div>
-                <button onclick="logout()" class="btn btn-danger w-100 mb-3">Logout</button>
+                <button onclick="logout()" class="btn btn-danger w-100 mb-3">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </button>
             </div>
             <div class="col-md-9">
                 <div class="card shadow">
@@ -157,11 +252,37 @@
         </div>
     </div>
 
+    <!-- Copy Success Notification -->
+    <div class="copy-success" id="copySuccess">
+        URL copied to clipboard!
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>About IPTV Player</h5>
+                    <p class="mb-0">Professional IPTV Player with advanced streaming capabilities and channel management.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    </div>
+                    <p class="mt-2 mb-0">&copy; 2024 IPTV Player. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
         const loading = document.getElementById('loading');
         const loginError = document.getElementById('loginError');
         const loginSection = document.getElementById('loginSection');
         const playerSection = document.getElementById('playerSection');
+        const copySuccess = document.getElementById('copySuccess');
 
         function showLoading() {
             loading.style.display = 'flex';
@@ -178,6 +299,13 @@
 
         function hideError() {
             loginError.style.display = 'none';
+        }
+
+        function showCopySuccess() {
+            copySuccess.style.display = 'block';
+            setTimeout(() => {
+                copySuccess.style.display = 'none';
+            }, 2000);
         }
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -228,7 +356,7 @@
                     categoriesDiv.innerHTML = data.map(cat => 
                         `<button class="btn btn-outline-primary category-btn" 
                          onclick="loadStreams(${cat.category_id})">
-                            ${cat.category_name}
+                            <i class="fas fa-folder me-2"></i>${cat.category_name}
                         </button>`
                     ).join('');
                 } else {
@@ -256,12 +384,13 @@
 
                 const streamsDiv = document.getElementById('streams');
                 if (Array.isArray(data) && data.length > 0) {
-                    streamsDiv.innerHTML = data.map(stream => 
-                        `<div class="col-12 col-md-6 mb-3">
+                    streamsDiv.innerHTML = data.map(stream => {
+                        const m3u8Url = stream.stream_url + '.m3u8';
+                        return `<div class="col-12 col-md-6 mb-3">
                             <div class="card">
                                 <div class="card-body p-2">
                                     <button class="btn btn-outline-secondary w-100 text-start stream-btn" 
-                                            onclick="playStream('${stream.stream_url}')">
+                                            onclick="playStream('${m3u8Url}')">
                                         <img src="${stream.stream_icon || '#'}" 
                                              onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='"
                                              alt="${stream.name}">
@@ -269,21 +398,21 @@
                                     </button>
                                     <div class="url-controls">
                                         <button class="btn btn-sm btn-info" 
-                                                onclick="toggleStreamUrl(this, '${stream.stream_url}')">
-                                            Show/Hide URL
+                                                onclick="toggleStreamUrl(this, '${m3u8Url}')">
+                                            <i class="fas fa-link me-1"></i>Show/Hide URL
                                         </button>
                                         <button class="btn btn-sm btn-success copy-btn" 
-                                                onclick="copyStreamUrl('${stream.stream_url}')">
-                                            Copy URL
+                                                onclick="copyStreamUrl('${m3u8Url}')">
+                                            <i class="fas fa-copy me-1"></i>Copy URL
                                         </button>
                                     </div>
                                     <div class="stream-url" id="url-${stream.stream_id}">
-                                        ${stream.stream_url}
+                                        ${m3u8Url}
                                     </div>
                                 </div>
                             </div>
-                        </div>`
-                    ).join('');
+                        </div>`;
+                    }).join('');
                 } else {
                     streamsDiv.innerHTML = '<div class="alert alert-info">No channels found</div>';
                 }
@@ -305,7 +434,7 @@
         async function copyStreamUrl(url) {
             try {
                 await navigator.clipboard.writeText(url);
-                alert('URL copied to clipboard!');
+                showCopySuccess();
             } catch (err) {
                 console.error('Failed to copy URL:', err);
                 alert('Failed to copy URL');
