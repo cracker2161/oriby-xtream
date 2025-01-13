@@ -10,6 +10,7 @@ import os
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
+# Configure logging
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -76,10 +77,38 @@ class XtreamClient:
             response = self.session.get(self.base_url, params=params, timeout=15)
             response.raise_for_status()
             data = response.json()
+
+            # Process and format stream URLs
+            if isinstance(data, list):
+                for stream in data:
+                    stream_id = stream.get('stream_id')
+                    if stream_id:
+                        # Format the stream URL with .m3u8 extension
+                        stream['stream_url'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}"
+                        # Add additional stream information
+                        stream['direct_source'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}"
+                        stream['m3u8_url'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}.m3u8"
+
             logger.debug(f"Retrieved {len(data) if isinstance(data, list) else 0} streams")
             return data
         except requests.exceptions.RequestException as e:
             logger.error(f"Streams error: {str(e)}")
+            return {'error': str(e)}
+
+    def get_stream_info(self, stream_id):
+        try:
+            params = {
+                'username': self.username,
+                'password': self.password,
+                'action': 'get_short_epg',
+                'stream_id': stream_id
+            }
+            logger.debug(f"Fetching stream info for ID: {stream_id}")
+            response = self.session.get(self.base_url, params=params, timeout=15)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Stream info error: {str(e)}")
             return {'error': str(e)}
 
 @app.route('/')
@@ -136,6 +165,8 @@ def categories():
         categories = client.get_live_categories()
 
         if isinstance(categories, list):
+            # Sort categories by name
+            categories.sort(key=lambda x: x.get('category_name', ''))
             return jsonify(categories)
         else:
             logger.error(f"Invalid categories response: {categories}")
@@ -160,6 +191,8 @@ def streams():
         streams = client.get_live_streams(category_id)
 
         if isinstance(streams, list):
+            # Sort streams by name
+            streams.sort(key=lambda x: x.get('name', ''))
             return jsonify(streams)
         else:
             logger.error(f"Invalid streams response: {streams}")
@@ -167,6 +200,24 @@ def streams():
 
     except Exception as e:
         logger.error(f"Streams route error: {str(e)}")
+        return jsonify({'error': str(e)})
+
+@app.route('/stream_info/<int:stream_id>')
+def stream_info(stream_id):
+    try:
+        if 'username' not in session:
+            return jsonify({'error': 'Not authorized'})
+
+        client = XtreamClient(
+            session['server'],
+            session['username'],
+            session['password']
+        )
+        info = client.get_stream_info(stream_id)
+        return jsonify(info)
+
+    except Exception as e:
+        logger.error(f"Stream info error: {str(e)}")
         return jsonify({'error': str(e)})
 
 @app.route('/logout')
@@ -180,5 +231,15 @@ def logout():
         logger.error(f"Logout error: {str(e)}")
         return jsonify({'error': str(e)})
 
+# Error handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not Found'}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal Server Error'}), 500
+
 if __name__ == '__main__':
+    # Set to False in production
     app.run(debug=True, host='0.0.0.0', port=5000)
