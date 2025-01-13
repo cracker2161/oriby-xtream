@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,56 +57,94 @@
             margin-top: 10px;
             display: none;
         }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            #video {
+                max-height: 40vh;
+            }
+            .stream-title {
+                font-size: 12px;
+            }
+            .stream-item img {
+                width: 25px;
+                height: 25px;
+            }
+            .category-btn {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+        .stream-url {
+            font-size: 12px;
+            word-break: break-all;
+            background: #f8f9fa;
+            padding: 5px;
+            border-radius: 4px;
+            margin-top: 5px;
+            display: none;
+        }
+        .copy-btn {
+            font-size: 12px;
+            padding: 2px 8px;
+            margin-top: 5px;
+        }
+        .url-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="loading">
         <div class="spinner-border text-light" role="status">
-            <span class="visually-hidden">লোড হচ্ছে...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
     <div class="container mt-4">
-        <!-- লগইন সেকশন -->
+        <!-- Login Section -->
         <div class="row" id="loginSection">
             <div class="col-md-6 offset-md-3">
                 <div class="card shadow">
                     <div class="card-body">
-                        <h3 class="card-title text-center mb-4">IPTV লগইন</h3>
+                        <h3 class="card-title text-center mb-4">IPTV Login</h3>
                         <form id="loginForm">
                             <div class="mb-3">
-                                <label class="form-label">সার্ভার ঠিকানা</label>
+                                <label class="form-label">Server Address</label>
                                 <input type="text" class="form-control" id="server" 
                                        value="http://watchindia.net:8880" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">ইউজারনেম</label>
+                                <label class="form-label">Username</label>
                                 <input type="text" class="form-control" id="username" 
                                        value="55901" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">পাসওয়ার্ড</label>
+                                <label class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" 
                                        value="63571" required>
                             </div>
                             <div id="loginError" class="alert alert-danger" style="display: none;"></div>
-                            <button type="submit" class="btn btn-primary w-100">লগইন করুন</button>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- প্লেয়ার সেকশন -->
+        <!-- Player Section -->
         <div class="row" id="playerSection" style="display: none;">
             <div class="col-md-3">
                 <div class="card shadow mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">ক্যাটাগরি</h5>
+                        <h5 class="card-title">Categories</h5>
                         <div id="categories" class="d-grid gap-2"></div>
                     </div>
                 </div>
-                <button onclick="logout()" class="btn btn-danger w-100 mb-3">লগআউট</button>
+                <button onclick="logout()" class="btn btn-danger w-100 mb-3">Logout</button>
             </div>
             <div class="col-md-9">
                 <div class="card shadow">
@@ -166,10 +204,10 @@
                     playerSection.style.display = 'flex';
                     loadCategories();
                 } else {
-                    showError(data.message || 'লগইন ব্যর্থ হয়েছে');
+                    showError(data.message || 'Login failed');
                 }
             } catch (error) {
-                showError('সার্ভারে সমস্যা হয়েছে');
+                showError('Server error occurred');
                 console.error('Login error:', error);
             }
             hideLoading();
@@ -194,13 +232,13 @@
                         </button>`
                     ).join('');
                 } else {
-                    categoriesDiv.innerHTML = '<div class="alert alert-info">কোন ক্যাটাগরি নেই</div>';
+                    categoriesDiv.innerHTML = '<div class="alert alert-info">No categories found</div>';
                 }
             } catch (error) {
                 console.error('Category loading error:', error);
                 document.getElementById('categories').innerHTML = 
                     `<div class="alert alert-danger">
-                        ক্যাটাগরি লোড করতে সমস্যা: ${error.message}
+                        Error loading categories: ${error.message}
                     </div>`;
             }
             hideLoading();
@@ -219,27 +257,59 @@
                 const streamsDiv = document.getElementById('streams');
                 if (Array.isArray(data) && data.length > 0) {
                     streamsDiv.innerHTML = data.map(stream => 
-                        `<div class="col-md-6">
-                            <button class="btn btn-outline-secondary w-100 text-start mb-2 stream-btn" 
-                                    onclick="playStream('${stream.stream_url}')">
-                                <img src="${stream.stream_icon || '#'}" 
-                                     onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='"
-                                     alt="${stream.name}">
-                                <span class="stream-title">${stream.name}</span>
-                            </button>
+                        `<div class="col-12 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body p-2">
+                                    <button class="btn btn-outline-secondary w-100 text-start stream-btn" 
+                                            onclick="playStream('${stream.stream_url}')">
+                                        <img src="${stream.stream_icon || '#'}" 
+                                             onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='"
+                                             alt="${stream.name}">
+                                        <span class="stream-title">${stream.name}</span>
+                                    </button>
+                                    <div class="url-controls">
+                                        <button class="btn btn-sm btn-info" 
+                                                onclick="toggleStreamUrl(this, '${stream.stream_url}')">
+                                            Show/Hide URL
+                                        </button>
+                                        <button class="btn btn-sm btn-success copy-btn" 
+                                                onclick="copyStreamUrl('${stream.stream_url}')">
+                                            Copy URL
+                                        </button>
+                                    </div>
+                                    <div class="stream-url" id="url-${stream.stream_id}">
+                                        ${stream.stream_url}
+                                    </div>
+                                </div>
+                            </div>
                         </div>`
                     ).join('');
                 } else {
-                    streamsDiv.innerHTML = '<div class="alert alert-info">কোন চ্যানেল নেই</div>';
+                    streamsDiv.innerHTML = '<div class="alert alert-info">No channels found</div>';
                 }
             } catch (error) {
                 console.error('Stream loading error:', error);
                 document.getElementById('streams').innerHTML = 
                     `<div class="alert alert-danger">
-                        চ্যানেল লোড করতে সমস্যা: ${error.message}
+                        Error loading channels: ${error.message}
                     </div>`;
             }
             hideLoading();
+        }
+
+        function toggleStreamUrl(button, url) {
+            const urlDiv = button.parentElement.nextElementSibling;
+            urlDiv.style.display = urlDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function copyStreamUrl(url) {
+            try {
+                await navigator.clipboard.writeText(url);
+                alert('URL copied to clipboard!');
+            } catch (err) {
+                console.error('Failed to copy URL:', err);
+                alert('Failed to copy URL');
+            }
         }
 
         function playStream(url) {
@@ -271,6 +341,12 @@
             }
             hideLoading();
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.matchMedia("(max-width: 768px)").matches) {
+                document.querySelector('.col-md-3').classList.add('mb-3');
+            }
+        });
     </script>
 </body>
 </html>
