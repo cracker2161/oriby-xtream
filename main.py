@@ -10,6 +10,7 @@ import os
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
+# Configure logging with both file and console handlers
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -37,11 +38,22 @@ class XtreamClient:
                 'username': self.username,
                 'password': self.password
             }
+            logger.debug(f"Authenticating user: {self.username}")
             response = self.session.get(self.base_url, params=params, timeout=15)
             response.raise_for_status()
-            return response.json()
+            auth_data = response.json()
+            
+            # Log successful authentication
+            if 'user_info' in auth_data:
+                logger.info(f"Successful authentication for user: {self.username}")
+                # Add expiry date to response
+                if 'exp_date' in auth_data['user_info']:
+                    exp_date = datetime.fromtimestamp(int(auth_data['user_info']['exp_date']))
+                    auth_data['user_info']['formatted_exp_date'] = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+            
+            return auth_data
         except requests.exceptions.RequestException as e:
-            logger.error(f"Authentication error: {str(e)}")
+            logger.error(f"Authentication error for user {self.username}: {str(e)}")
             return {'error': str(e)}
 
     def get_live_categories(self):
@@ -51,9 +63,17 @@ class XtreamClient:
                 'password': self.password,
                 'action': 'get_live_categories'
             }
+            logger.debug("Fetching live categories")
             response = self.session.get(self.base_url, params=params, timeout=15)
             response.raise_for_status()
-            return response.json()
+            categories = response.json()
+            
+            # Sort categories by name
+            if isinstance(categories, list):
+                categories.sort(key=lambda x: x.get('category_name', ''))
+                logger.info(f"Successfully retrieved {len(categories)} categories")
+            
+            return categories
         except requests.exceptions.RequestException as e:
             logger.error(f"Categories error: {str(e)}")
             return {'error': str(e)}
@@ -68,19 +88,25 @@ class XtreamClient:
             if category_id:
                 params['category_id'] = category_id
 
+            logger.debug(f"Fetching streams for category: {category_id}")
             response = self.session.get(self.base_url, params=params, timeout=15)
             response.raise_for_status()
-            data = response.json()
+            streams = response.json()
 
-            if isinstance(data, list):
-                for stream in data:
+            # Process and format stream URLs
+            if isinstance(streams, list):
+                for stream in streams:
                     stream_id = stream.get('stream_id')
                     if stream_id:
                         stream['stream_url'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}"
                         stream['direct_source'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}"
                         stream['m3u8_url'] = f"{self.server}/live/{self.username}/{self.password}/{stream_id}.m3u8"
+                
+                # Sort streams by name
+                streams.sort(key=lambda x: x.get('name', ''))
+                logger.info(f"Successfully retrieved {len(streams)} streams")
 
-            return data
+            return streams
         except requests.exceptions.RequestException as e:
             logger.error(f"Streams error: {str(e)}")
             return {'error': str(e)}
@@ -93,6 +119,7 @@ class XtreamClient:
                 'action': 'get_short_epg',
                 'stream_id': stream_id
             }
+            logger.debug(f"Fetching stream info for ID: {stream_id}")
             response = self.session.get(self.base_url, params=params, timeout=15)
             response.raise_for_status()
             return response.json()
@@ -108,6 +135,10 @@ def index():
 def connect():
     try:
         data = request.json
+        if not all(key in data for key in ['server', 'username', 'password']):
+            raise ValueError("Missing required login parameters")
+
+        logger.info(f"Connection attempt from: {data['username']}")
         client = XtreamClient(data['server'], data['username'], data['password'])
         auth = client.authenticate()
 
@@ -116,14 +147,17 @@ def connect():
             session['username'] = data['username']
             session['password'] = data['password']
             session['auth_time'] = datetime.now().timestamp()
+            logger.info(f"Successful login: {data['username']}")
             return jsonify({
                 'status': 'success',
                 'data': auth
             })
 
+        error_msg = auth.get('error', 'Authentication failed')
+        logger.warning(f"Failed login attempt: {data['username']} - {error_msg}")
         return jsonify({
             'status': 'error',
-            'message': auth.get('error', 'Login failed')
+            'message': error_msg
         })
 
     except Exception as e:
@@ -219,19 +253,58 @@ def account_info():
 @app.route('/logout')
 def logout():
     try:
+        username = session.get('username', 'unknown')
         session.clear()
+        logger.info(f"User logged out: {username}")
         return jsonify({'status': 'success'})
     except Exception as e:
         logger.error(f"Logout error: {str(e)}")
         return jsonify({'error': str(e)})
 
+@app.route('/export_playlist')
+def export_playlist():
+    try:
+        if 'username' not in session:
+            return jsonify({'error': 'Not authorized'})
+
+        client = XtreamClient(
+            session['server'],
+            session['username'],
+            session['password']
+        )
+        streams = client.get_live_streams()
+        
+        if isinstance(streams, list):
+            playlist_content = "#EXTM3U\n"
+            for stream in streams:
+                playlist_content += f"#EXTINF:-1,{stream.get('name', 'Unknown')}\n"
+                playlist_content += f"{stream.get('stream_url', '')}.m3u8\n"
+            
+            return jsonify({
+                'status': 'success',
+                'playlist': playlist_content
+            })
+        
+        return jsonify({'error': 'Could not generate playlist'})
+
+    except Exception as e:
+        logger.error(f"Export playlist error: {str(e)}")
+        return jsonify({'error': str(e)})
+
+# Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
     return jsonify({'error': 'Not Found'}), 404
 
 @app.errorhandler(500)
 def internal_error(error):
+    logger.error(f"Internal server error: {str(error)}")
     return jsonify({'error': 'Internal Server Error'}), 500
 
 if __name__ == '__main__':
+    # Ensure the log directory exists
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    
+    # Set to False in production
     app.run(debug=True, host='0.0.0.0', port=5000)
