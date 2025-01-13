@@ -8,10 +8,8 @@ import secrets
 import os
 
 app = Flask(__name__)
-# শক্তিশালী র্যান্ডম সিক্রেট কী জেনারেট করা
 app.secret_key = secrets.token_hex(32)
 
-# লগিং কনফিগারেশন
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -93,7 +91,7 @@ def connect():
     try:
         data = request.json
         if not all(key in data for key in ['server', 'username', 'password']):
-            raise ValueError("সব তথ্য দিন")
+            raise ValueError("All fields are required")
 
         logger.info(f"Connection attempt from: {data['username']}")
         client = XtreamClient(data['server'], data['username'], data['password'])
@@ -110,7 +108,7 @@ def connect():
                 'data': auth
             })
 
-        error_msg = auth.get('error', 'লগইন ব্যর্থ হয়েছে')
+        error_msg = auth.get('error', 'Login failed')
         logger.warning(f"Failed login: {data['username']} - {error_msg}")
         return jsonify({
             'status': 'error',
@@ -128,7 +126,7 @@ def connect():
 def categories():
     try:
         if 'username' not in session:
-            return jsonify({'error': 'অনুমতি নেই'})
+            return jsonify({'error': 'Not authorized'})
 
         client = XtreamClient(
             session['server'],
@@ -141,7 +139,7 @@ def categories():
             return jsonify(categories)
         else:
             logger.error(f"Invalid categories response: {categories}")
-            return jsonify({'error': 'ক্যাটাগরি লোড করতে সমস্যা'})
+            return jsonify({'error': 'Error loading categories'})
 
     except Exception as e:
         logger.error(f"Categories route error: {str(e)}")
@@ -151,7 +149,7 @@ def categories():
 def streams():
     try:
         if 'username' not in session:
-            return jsonify({'error': 'অনুমতি নেই'})
+            return jsonify({'error': 'Not authorized'})
 
         category_id = request.args.get('category_id')
         client = XtreamClient(
@@ -165,7 +163,7 @@ def streams():
             return jsonify(streams)
         else:
             logger.error(f"Invalid streams response: {streams}")
-            return jsonify({'error': 'চ্যানেল লোড করতে সমস্যা'})
+            return jsonify({'error': 'Error loading channels'})
 
     except Exception as e:
         logger.error(f"Streams route error: {str(e)}")
@@ -183,5 +181,4 @@ def logout():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    # প্রোডাকশন সার্ভারে ডিবাগ মোড বন্ধ রাখুন
     app.run(debug=True, host='0.0.0.0', port=5000)
